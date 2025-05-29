@@ -1,8 +1,18 @@
 import requests
+from flask import Flask
+import threading
 from bs4 import BeautifulSoup
 import time
 import datetime
 import re
+
+app = Flask(__name__)
+@app.route('/')
+def home():
+    return "Bot is running."
+
+def run_flask():
+    app.run(host='0.0.0.0', port=10000)
 
 DISCORD_WEBHOOK = "https://discordapp.com/api/webhooks/1376952972210208798/q468H-LKCXOyZBrThDN5ZeZyNUwAAl7y9fRzL_EwchS96403JHVS_GEsR5cgVklOe_bP"
 TICKET_PAGE_URLS = [
@@ -60,3 +70,11 @@ while True:
         time.sleep(5)
     print("⏱ 等待 60 秒...\n")
     time.sleep(60)
+
+if __name__ == "__main__":
+    threading.Thread(target=run_flask).start()
+    while True:
+        # 你的 bot 主程式循環
+        for url in TICKET_PAGE_URLS:
+            check_ticket_page(url)
+        time.sleep(60)
