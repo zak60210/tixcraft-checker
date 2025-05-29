@@ -55,6 +55,10 @@ def check_ticket_page(url):
         links = soup.select("li.select_form_b > a[style*='opacity: 1']")
         results = []
 
+        if not links:
+            print(f"⚠️ 找不到票區連結（可能是活動結束、網頁變動）➡️ {url}")
+            return
+
         for link in links:
             text = link.get_text(strip=True).replace("\n", " ")
             match = re.search(r"剩餘\s*(\d+)", text)
@@ -65,9 +69,11 @@ def check_ticket_page(url):
             all_text = "\n".join(results)
             send_to_discord_embed("🎉 有票啦！", all_text, url)
         else:
-            print(f"❌ 無票：{url}")
+            print(f"❌ 無票：{url}")  # ⬅️ 加強這行永遠會顯示
+
     except Exception as e:
         print(f"⚠️ 錯誤（{url}）：{e}")
+
 
 # ============ 主要執行程式 ============
 def run_bot():
